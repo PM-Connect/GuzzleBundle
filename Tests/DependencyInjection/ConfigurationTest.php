@@ -230,4 +230,45 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             $this->assertArrayHasKey('Header-hyphened', $headerConfig);
         }
     }
+
+    public function testSingleClientConfigWithSimpleMiddleware()
+    {
+        $config = [
+            'guzzle' => [
+                'clients' => [
+                    'test_client' => [
+                        'base_url' => 'http://baseurl/path',
+                        'headers' => [
+                            'Accept' => 'application/json'
+                        ],
+                        'options' => [
+                            'auth' => [
+                                'user',
+                                'pass'
+                            ],
+                            'headers' => [
+                                'Accept' => 'application/json'
+                            ],
+                            'query' => [
+                            ],
+                            'proxy' => 'http://proxy.org'
+                        ],
+                        'middleware' => [
+
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $processor = new Processor();
+        $processedConfig = $processor->processConfiguration(new Configuration(true), $config);
+
+        unset($config['guzzle']['clients']['test_client']['options']['proxy']);
+
+        $this->assertEquals(array_merge_recursive($config['guzzle'], [
+            'logging' => false,
+            'clients' => ['test_client' => ['options' => ['proxy' => ['http' => 'http://proxy.org']]]]
+        ]), $processedConfig);
+    }
 }

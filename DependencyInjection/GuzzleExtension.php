@@ -132,6 +132,12 @@ class GuzzleExtension extends Extension
             }
         }
 
+        if (isset($config['middleware'])) {
+            foreach($config['middleware'] as $middleware) {
+
+            }
+        }
+
         $handler->addMethodCall('push', [$logExpression]);
         // goes on the end of the stack.
         $handler->addMethodCall('unshift', [$eventExpression]);

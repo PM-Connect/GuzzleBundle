@@ -189,6 +189,11 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
+
+                    ->arrayNode('middleware')
+                        ->prototype('scalar')->end()
+                    ->end()
+
                 ->end()
             ->end();
 
