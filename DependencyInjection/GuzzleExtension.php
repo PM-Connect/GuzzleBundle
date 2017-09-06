@@ -134,7 +134,11 @@ class GuzzleExtension extends Extension
 
         if (isset($config['middleware'])) {
             foreach($config['middleware'] as $middleware) {
-
+                if (substr($middleware, 0, 2) === '@=') {
+                    $handler->addMethodCall('push', [new Expression(substr($middleware, 2))]);
+                } else {
+                    $handler->addMethodCall('push', [new Reference($middleware)]);
+                }
             }
         }
 

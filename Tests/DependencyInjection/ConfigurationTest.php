@@ -250,11 +250,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                                 'Accept' => 'application/json'
                             ],
                             'query' => [
-                            ],
-                            'proxy' => 'http://proxy.org'
+                            ]
                         ],
                         'middleware' => [
-
+                            '@=service("app.service").middleware()',
+                            'app.service'
                         ]
                     ]
                 ]
@@ -264,11 +264,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $processor = new Processor();
         $processedConfig = $processor->processConfiguration(new Configuration(true), $config);
 
-        unset($config['guzzle']['clients']['test_client']['options']['proxy']);
-
         $this->assertEquals(array_merge_recursive($config['guzzle'], [
             'logging' => false,
-            'clients' => ['test_client' => ['options' => ['proxy' => ['http' => 'http://proxy.org']]]]
+            'clients' => ['test_client' => ['plugin' => ['wsse' => ['username' => false, 'password' => '', 'created_at' => false]]]]
         ]), $processedConfig);
     }
 }
